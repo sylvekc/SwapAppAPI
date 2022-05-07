@@ -4,9 +4,11 @@ namespace SwapApp.Entities
 {
     public class ItemDbContext : DbContext
     {
-        private string _connectionString = "Server=(localdb)\\mssqllocaldb;Database=SwapAppDb;Trusted_Connection=True;";
+        private string _connectionString = "Server = localhost; Database=SwapAppAPI;Trusted_Connection=True;";
+            //"Server=(localdb)\\mssqllocaldb;Database=SwapAppDb;Trusted_Connection=True;";
+       
         public DbSet<Item> Item { get; set; }
-        public DbSet<WherePickup> WherePickup { get; set; }
+        public DbSet<User> User { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,12 +31,12 @@ namespace SwapApp.Entities
                .IsRequired()
                .HasMaxLength(100);
 
-            modelBuilder.Entity<WherePickup>()
+            modelBuilder.Entity<Item>()
                 .Property(e => e.City)
                 .IsRequired()
                 .HasMaxLength(25);
 
-            modelBuilder.Entity<WherePickup>()
+            modelBuilder.Entity<Item>()
                 .Property(e => e.Street)
                 .HasMaxLength(50);
     

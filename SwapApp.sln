@@ -5,11 +5,6 @@ VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SwapApp", "SwapApp.csproj", "{04A5174F-C35C-429B-BFE8-6CADC1C530D9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FC073C3D-76BC-4703-873C-41F75AFD3A00}"
-	ProjectSection(SolutionItems) = preProject
-		WeatherForecastService.cs = WeatherForecastService.cs
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

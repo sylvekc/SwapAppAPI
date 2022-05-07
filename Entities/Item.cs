@@ -7,8 +7,9 @@
         public string Description  { get; set; }
         public bool ForFree { get; set; }
         public string SwapFor { get; set; }
-        public string WherePickupId { get; set; }
-        public virtual WherePickup WherePickup { get; set; }
+        public string City { get; set; }
+        public string District { get; set; }
+        public string Street { get; set; }
         public int UserId { get; set; }
         public virtual User User { get; set; }
     }
