@@ -32,7 +32,7 @@ namespace SwapApp.Entities
             modelBuilder.Entity<Item>()
                 .Property(e => e.City)
                 .IsRequired()
-                .HasMaxLength(25);
+                .HasMaxLength(50);
 
             modelBuilder.Entity<Item>()
                 .Property(e => e.Street)

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SwapApp.Entities;
+using SwapApp.Models;
+using SwapApp.Services;
 
 namespace SwapApp.Controllers
 {
@@ -8,42 +10,45 @@ namespace SwapApp.Controllers
     public class ItemController : ControllerBase
     {
         private readonly ItemDbContext _dbContext;
+        private readonly IMapper _mapper;
+        private readonly IItemService _itemService;
 
-        public ItemController(ItemDbContext dbContext)
-        {
-            _dbContext = dbContext;
+        public ItemController(IItemService itemService)
+        { 
+            _itemService = itemService;
         }
+        
 
         [HttpPost]
-        public ActionResult<Item> Post([FromBody] Item item)
+        public ActionResult AddItem ([FromBody] AddItemDto addItem)
         {
-            try
+            if(!ModelState.IsValid)
             {
-                _dbContext.Item.AddRange(item);
-                _dbContext.SaveChanges();
-                return Ok();
+                return BadRequest(ModelState);
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+
+            var id = _itemService.Create(addItem);
+          
+                return Created($"/api/item/{id}", null);
         }
 
 
         [HttpGet]
-        public ActionResult<IEnumerable<Item>> GetAll()
+        public ActionResult<IEnumerable<ItemDto>> GetAll()
         {
-            var items = _dbContext.Item.ToList();
-            return Ok(items);
+            var itemsDtos = _itemService.GetAll();
+            return Ok(itemsDtos);
         }
+
+
         [HttpGet("{id}")]
-        public ActionResult<Item> Get([FromRoute] int id)
+        public ActionResult<ItemDto> Get([FromRoute] int id)
         {
-            var item = _dbContext.Item.FirstOrDefault(x => x.Id == id);
+            var item = _itemService.GetById(id);
 
             if (item is null)
             {
-                return NotFound("Nie znaleziono przedmiotu o podanym ID");
+                return NotFound($"Nie znaleziono przedmiotu o ID = {id}");
             }
             return Ok(item);
         }

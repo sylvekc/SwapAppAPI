@@ -1,5 +1,7 @@
 using SwapApp;
 using SwapApp.Entities;
+using SwapApp.Services;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ItemDbContext>();
 builder.Services.AddScoped<ItemSeeder>();
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+builder.Services.AddScoped<IItemService, ItemService>();
 
 var app = builder.Build();
 var scope = app.Services.CreateScope();
