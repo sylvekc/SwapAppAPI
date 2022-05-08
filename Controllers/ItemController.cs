@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using SwapApp.Entities;
 
 namespace SwapApp.Controllers
@@ -12,6 +13,23 @@ namespace SwapApp.Controllers
         {
             _dbContext = dbContext;
         }
+
+        [HttpPost]
+        public ActionResult<Item> Post([FromBody] Item item)
+        {
+            try
+            {
+                _dbContext.Item.AddRange(item);
+                _dbContext.SaveChanges();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
         [HttpGet]
         public ActionResult<IEnumerable<Item>> GetAll()
         {
@@ -19,15 +37,14 @@ namespace SwapApp.Controllers
             return Ok(items);
         }
         [HttpGet("{id}")]
-        public ActionResult<Item>Get([FromRoute] int id)
+        public ActionResult<Item> Get([FromRoute] int id)
         {
             var item = _dbContext.Item.FirstOrDefault(x => x.Id == id);
 
             if (item is null)
             {
-                return NotFound();
+                return NotFound("Nie znaleziono przedmiotu o podanym ID");
             }
-
             return Ok(item);
         }
 

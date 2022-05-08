@@ -34,12 +34,12 @@ namespace SwapApp
                 City = "Kraków",
                 District = "Kazimierz",
                 Street = "Miodowa",
-                User = new User()
-                {
-                    Name = "Sylwek",
-                    Email = "sylvekz@vp.pl",
-                    Password = "123",
-                }
+                //User = new User()
+                //{
+                //    Name = "Sylwek",
+                //    Email = "sylvekz@vp.pl",
+                //    Password = "123",
+                //}
                 //WherePickup = new WherePickup()
                 //{
                 //    City = "Kraków",
@@ -53,6 +53,16 @@ namespace SwapApp
                 //    Password = "123",
                 //},
 
+            };
+            new Item()
+            {
+                Name = "długopis",
+                Description = "czarny",
+                ForFree = false,
+                SwapFor = "obojętne",
+                City = "Kraków",
+                District = "Kazimierz",
+                Street = "Miodowa",
             };
             return items;
         }

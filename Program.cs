@@ -15,11 +15,11 @@ builder.Services.AddScoped<ItemSeeder>();
 var app = builder.Build();
 var scope = app.Services.CreateScope();
 var seeder = scope.ServiceProvider.GetRequiredService<ItemSeeder>();
+seeder.Seed();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    seeder.Seed();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
