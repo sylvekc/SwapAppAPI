@@ -6,9 +6,10 @@ namespace SwapApp.Services
 {
     public interface IItemService
     {
-        int Create(AddItemDto addItem);
-        IEnumerable<ItemDto> GetAll();
-        ItemDto GetById(int id);
+        int AddItem(AddItemDto addItem);
+        IEnumerable<ItemDto> GetAllItems();
+        ItemDto GetItemById(int id);
+        bool DeleteItem (int id);
     }
 
     public class ItemService : IItemService
@@ -21,7 +22,20 @@ namespace SwapApp.Services
             _dbContext = dbContext;
             _mapper = mapper;
         }
-        public ItemDto GetById(int id)
+
+        public bool DeleteItem (int id)
+        {
+            var item = _dbContext.Item.FirstOrDefault(x => x.Id == id);
+            if (item is null) return false;
+            _dbContext.Item.Remove(item);
+            _dbContext.SaveChanges();
+            return true;
+            
+
+                
+        }
+
+        public ItemDto GetItemById(int id)
         {
             var item = _dbContext.Item.FirstOrDefault(x => x.Id == id);
             if (item is null) return null;
@@ -29,7 +43,7 @@ namespace SwapApp.Services
             return result;
         }
 
-        public IEnumerable<ItemDto> GetAll()
+        public IEnumerable<ItemDto> GetAllItems()
         {
             var items = _dbContext.Item.ToList();
             var itemsDtos = _mapper.Map<List<ItemDto>>(items);
@@ -37,7 +51,7 @@ namespace SwapApp.Services
 
         }
 
-        public int Create(AddItemDto addItem)
+        public int AddItem(AddItemDto addItem)
         {
             var item = _mapper.Map<Item>(addItem);
             _dbContext.Item.Add(item);

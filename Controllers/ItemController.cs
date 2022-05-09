@@ -9,8 +9,6 @@ namespace SwapApp.Controllers
     [Route("api/item")]
     public class ItemController : ControllerBase
     {
-        private readonly ItemDbContext _dbContext;
-        private readonly IMapper _mapper;
         private readonly IItemService _itemService;
 
         public ItemController(IItemService itemService)
@@ -18,6 +16,17 @@ namespace SwapApp.Controllers
             _itemService = itemService;
         }
         
+        [HttpDelete("{id}")]
+        public ActionResult DeleteItem ([FromRoute] int id)
+        {
+           var isDeleted = _itemService.DeleteItem(id);
+            if (isDeleted)
+            {
+                return NoContent();
+            }
+            return NotFound();
+        }
+
 
         [HttpPost]
         public ActionResult AddItem ([FromBody] AddItemDto addItem)
@@ -27,24 +36,24 @@ namespace SwapApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            var id = _itemService.Create(addItem);
+            var id = _itemService.AddItem(addItem);
           
                 return Created($"/api/item/{id}", null);
         }
 
 
         [HttpGet]
-        public ActionResult<IEnumerable<ItemDto>> GetAll()
+        public ActionResult<IEnumerable<ItemDto>> GetAllItems()
         {
-            var itemsDtos = _itemService.GetAll();
+            var itemsDtos = _itemService.GetAllItems();
             return Ok(itemsDtos);
         }
 
 
         [HttpGet("{id}")]
-        public ActionResult<ItemDto> Get([FromRoute] int id)
+        public ActionResult<ItemDto> GetItem([FromRoute] int id)
         {
-            var item = _itemService.GetById(id);
+            var item = _itemService.GetItemById(id);
 
             if (item is null)
             {
