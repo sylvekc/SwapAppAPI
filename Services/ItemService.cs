@@ -18,11 +18,13 @@ namespace SwapApp.Services
     {
         private readonly ItemDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly ILogger<ItemService> _logger;
 
-        public ItemService(ItemDbContext dbContext, IMapper mapper)
+        public ItemService(ItemDbContext dbContext, IMapper mapper, ILogger<ItemService> logger)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public bool UpdateItem (UpdateItemDto updateItem, int id)
@@ -44,6 +46,7 @@ namespace SwapApp.Services
 
         public bool DeleteItem (int id)
         {
+            _logger.LogError($"Item with id: {id} DELETE action invoked");
             var item = _dbContext.Item.FirstOrDefault(x => x.Id == id);
             if (item is null) return false;
             _dbContext.Item.Remove(item);

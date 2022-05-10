@@ -1,10 +1,11 @@
+using NLog.Web;
 using SwapApp;
 using SwapApp.Entities;
 using SwapApp.Services;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Host.UseNLog();
 // Add services to the container.
 
 builder.Services.AddControllers();
