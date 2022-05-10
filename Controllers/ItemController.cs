@@ -7,6 +7,7 @@ using SwapApp.Services;
 namespace SwapApp.Controllers
 {
     [Route("api/item")]
+    [ApiController]
     public class ItemController : ControllerBase
     {
         private readonly IItemService _itemService;
@@ -19,17 +20,7 @@ namespace SwapApp.Controllers
         [HttpPut("{id}")]
         public ActionResult UpdateItem ([FromBody] UpdateItemDto updateItem, [FromRoute] int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var isUpdated = _itemService.UpdateItem(updateItem, id);
-
-            if(!isUpdated)
-            {
-                return NotFound($"Nie znaleziono przedmiotu o ID = {id}");
-            }
+            _itemService.UpdateItem(updateItem, id);
 
             return Ok();
         }
@@ -37,22 +28,13 @@ namespace SwapApp.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteItem ([FromRoute] int id)
         {
-           var isDeleted = _itemService.DeleteItem(id);
-            if (isDeleted)
-            {
-                return NoContent();
-            }
-            return NotFound();
+           _itemService.DeleteItem(id);
+          return NoContent();
         }
 
         [HttpPost]
         public ActionResult AddItem ([FromBody] AddItemDto addItem)
         {
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var id = _itemService.AddItem(addItem);
           
                 return Created($"/api/item/{id}", null);
@@ -70,10 +52,6 @@ namespace SwapApp.Controllers
         {
             var item = _itemService.GetItemById(id);
 
-            if (item is null)
-            {
-                return NotFound($"Nie znaleziono przedmiotu o ID = {id}");
-            }
             return Ok(item);
         }
 

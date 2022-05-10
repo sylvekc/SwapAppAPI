@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using SwapApp.Entities;
+using SwapApp.Exceptions;
 using SwapApp.Models;
 
 namespace SwapApp.Services
@@ -30,7 +31,8 @@ namespace SwapApp.Services
         public bool UpdateItem (UpdateItemDto updateItem, int id)
         {
             var item = _dbContext.Item.FirstOrDefault(x => x.Id == id);
-            if (item is null) return false;
+            if (item is null)
+                throw new NotFoundException("Item not found");
 
             item.Name = updateItem.Name;
             item.Description = updateItem.Description;
@@ -57,7 +59,8 @@ namespace SwapApp.Services
         public GetItemDto GetItemById(int id)
         {
             var item = _dbContext.Item.FirstOrDefault(x => x.Id == id);
-            if (item is null) return null;
+            if (item is null)
+                throw new NotFoundException($"Item with id: {id} not found");
             var result = _mapper.Map<GetItemDto>(item);
             return result;
         }

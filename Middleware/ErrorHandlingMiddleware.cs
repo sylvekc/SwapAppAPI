@@ -1,4 +1,6 @@
-﻿namespace SwapApp.Middleware
+﻿using SwapApp.Exceptions;
+
+namespace SwapApp.Middleware
 {
     public class ErrorHandlingMiddleware : IMiddleware
     {
@@ -12,6 +14,11 @@
             try
             {
                 await next.Invoke(context);
+            }
+            catch (NotFoundException notFoundException)
+            {
+                context.Response.StatusCode = 404;
+                await context.Response.WriteAsync(notFoundException.Message);
             }
             catch (Exception e)
             {
