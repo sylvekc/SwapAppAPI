@@ -7,9 +7,11 @@ namespace SwapApp.Services
     public interface IItemService
     {
         int AddItem(AddItemDto addItem);
-        IEnumerable<ItemDto> GetAllItems();
-        ItemDto GetItemById(int id);
+        IEnumerable<GetItemDto> GetAllItems();
+        GetItemDto GetItemById(int id);
         bool DeleteItem (int id);
+        bool UpdateItem(UpdateItemDto updateItem, int id);
+
     }
 
     public class ItemService : IItemService
@@ -23,6 +25,23 @@ namespace SwapApp.Services
             _mapper = mapper;
         }
 
+        public bool UpdateItem (UpdateItemDto updateItem, int id)
+        {
+            var item = _dbContext.Item.FirstOrDefault(x => x.Id == id);
+            if (item is null) return false;
+
+            item.Name = updateItem.Name;
+            item.Description = updateItem.Description;
+            item.District = updateItem.District;
+            item.Street = updateItem.Street;
+            item.City = updateItem.City;
+            item.SwapFor = updateItem.SwapFor;
+            item.ForFree = updateItem.ForFree;
+
+            _dbContext.SaveChanges();
+            return true;
+        }
+
         public bool DeleteItem (int id)
         {
             var item = _dbContext.Item.FirstOrDefault(x => x.Id == id);
@@ -30,23 +49,20 @@ namespace SwapApp.Services
             _dbContext.Item.Remove(item);
             _dbContext.SaveChanges();
             return true;
-            
-
-                
         }
 
-        public ItemDto GetItemById(int id)
+        public GetItemDto GetItemById(int id)
         {
             var item = _dbContext.Item.FirstOrDefault(x => x.Id == id);
             if (item is null) return null;
-            var result = _mapper.Map<ItemDto>(item);
+            var result = _mapper.Map<GetItemDto>(item);
             return result;
         }
 
-        public IEnumerable<ItemDto> GetAllItems()
+        public IEnumerable<GetItemDto> GetAllItems()
         {
             var items = _dbContext.Item.ToList();
-            var itemsDtos = _mapper.Map<List<ItemDto>>(items);
+            var itemsDtos = _mapper.Map<List<GetItemDto>>(items);
             return itemsDtos;
 
         }

@@ -8,7 +8,7 @@ namespace SwapApp
     {
         public ItemMappingProfile()
         {
-            CreateMap<Item, ItemDto>();
+            CreateMap<Item, GetItemDto>();
             CreateMap<AddItemDto, Item>();
         }
     }

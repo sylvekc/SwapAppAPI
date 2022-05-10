@@ -15,7 +15,25 @@ namespace SwapApp.Controllers
         { 
             _itemService = itemService;
         }
-        
+
+        [HttpPut("{id}")]
+        public ActionResult UpdateItem ([FromBody] UpdateItemDto updateItem, [FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var isUpdated = _itemService.UpdateItem(updateItem, id);
+
+            if(!isUpdated)
+            {
+                return NotFound($"Nie znaleziono przedmiotu o ID = {id}");
+            }
+
+            return Ok();
+        }
+
         [HttpDelete("{id}")]
         public ActionResult DeleteItem ([FromRoute] int id)
         {
@@ -26,7 +44,6 @@ namespace SwapApp.Controllers
             }
             return NotFound();
         }
-
 
         [HttpPost]
         public ActionResult AddItem ([FromBody] AddItemDto addItem)
@@ -41,17 +58,15 @@ namespace SwapApp.Controllers
                 return Created($"/api/item/{id}", null);
         }
 
-
         [HttpGet]
-        public ActionResult<IEnumerable<ItemDto>> GetAllItems()
+        public ActionResult<IEnumerable<GetItemDto>> GetAllItems()
         {
             var itemsDtos = _itemService.GetAllItems();
             return Ok(itemsDtos);
         }
 
-
         [HttpGet("{id}")]
-        public ActionResult<ItemDto> GetItem([FromRoute] int id)
+        public ActionResult<GetItemDto> GetItem([FromRoute] int id)
         {
             var item = _itemService.GetItemById(id);
 

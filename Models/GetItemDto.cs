@@ -2,7 +2,7 @@
 
 namespace SwapApp.Models
 {
-    public class ItemDto
+    public class GetItemDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
