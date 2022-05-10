@@ -4,7 +4,7 @@ namespace SwapApp.Entities
 {
     public class ItemDbContext : DbContext
     {
-        private string _connectionString = "Server = localhost; Database=SwapAppAPI;Trusted_Connection=True;";
+        private string _connectionString = "Server = localhost; Database=sSwapAppAPI;Trusted_Connection=True;";
         public DbSet<Item> Item { get; set; }
         //public DbSet<User> User { get; set; }
 

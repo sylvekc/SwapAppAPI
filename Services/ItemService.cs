@@ -66,6 +66,7 @@ namespace SwapApp.Services
         {
             var items = _dbContext.Item.ToList();
             var itemsDtos = _mapper.Map<List<GetItemDto>>(items);
+           
             return itemsDtos;
 
         }
