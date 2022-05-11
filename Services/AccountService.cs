@@ -1,4 +1,5 @@
-﻿using SwapApp.Entities;
+﻿using Microsoft.AspNetCore.Identity;
+using SwapApp.Entities;
 using SwapApp.Models;
 
 namespace SwapApp.Services
@@ -10,9 +11,11 @@ namespace SwapApp.Services
     public class AccountService : IAccountService
     {
         private readonly ItemDbContext _itemDbContext;
-        public AccountService(ItemDbContext itemDbContext)
+        private readonly IPasswordHasher<User> _passwordHasher;
+        public AccountService(ItemDbContext itemDbContext, IPasswordHasher<User> passwordHasher)
         {
             _itemDbContext = itemDbContext;
+            _passwordHasher = passwordHasher;
         }
         public void RegisterUser (RegisterUserDto registerDto)
         {
@@ -21,8 +24,9 @@ namespace SwapApp.Services
                 Email = registerDto.Email,
                 Name = registerDto.Name,
                 RoleId = registerDto.RoleId,
-                PasswordHash = registerDto.Password
             };
+            var hashedPassword = _passwordHasher.HashPassword(newUser, registerDto.Password);
+            newUser.PasswordHash = hashedPassword;
             _itemDbContext.Users.Add(newUser);
             _itemDbContext.SaveChanges();
         }

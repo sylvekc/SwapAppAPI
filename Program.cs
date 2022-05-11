@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using NLog.Web;
 using SwapApp;
 using SwapApp.Entities;
@@ -19,6 +20,7 @@ builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<IItemService, ItemService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<RequestTimeMiddleware>();
 
 var app = builder.Build();
