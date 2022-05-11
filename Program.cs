@@ -1,6 +1,7 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using NLog.Web;
 using SwapApp;
 using SwapApp.Entities;
@@ -9,13 +10,32 @@ using SwapApp.Models;
 using SwapApp.Services;
 using SwapApp.Validators;
 using System.Reflection;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseNLog();
 // Add services to the container.
+var authentcationSettings = new AuthenticationSettings();
+builder.Configuration.GetSection("Authentication").Bind(authentcationSettings);
+
+builder.Services.AddAuthentication(option =>
+{
+    option.DefaultAuthenticateScheme = "Bearer";
+    option.DefaultChallengeScheme = "Bearer";
+    option.DefaultScheme = "Bearer";
+}).AddJwtBearer(cfg =>
+{
+    cfg.RequireHttpsMetadata = false;
+    cfg.SaveToken = true;
+    cfg.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidIssuer = authentcationSettings.JwtIssuer,
+        ValidAudience = authentcationSettings.JwtIssuer,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authentcationSettings.JwtKey)),
+    };
+});
 
 builder.Services.AddControllers().AddFluentValidation();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ItemDbContext>();
@@ -42,6 +62,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseMiddleware<RequestTimeMiddleware>();
+app.UseAuthentication();
 app.UseHttpsRedirection();
 
 //app.UseAuthorization();
