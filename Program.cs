@@ -17,6 +17,7 @@ builder.Services.AddDbContext<ItemDbContext>();
 builder.Services.AddScoped<ItemSeeder>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<IItemService, ItemService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<RequestTimeMiddleware>();
 
