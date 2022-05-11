@@ -15,8 +15,9 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseNLog();
 // Add services to the container.
-var authentcationSettings = new AuthenticationSettings();
-builder.Configuration.GetSection("Authentication").Bind(authentcationSettings);
+var authenticationSettings = new AuthenticationSettings();
+builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
+builder.Services.AddSingleton(authenticationSettings);
 
 builder.Services.AddAuthentication(option =>
 {
@@ -29,9 +30,9 @@ builder.Services.AddAuthentication(option =>
     cfg.SaveToken = true;
     cfg.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidIssuer = authentcationSettings.JwtIssuer,
-        ValidAudience = authentcationSettings.JwtIssuer,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authentcationSettings.JwtKey)),
+        ValidIssuer = authenticationSettings.JwtIssuer,
+        ValidAudience = authenticationSettings.JwtIssuer,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),
     };
 });
 

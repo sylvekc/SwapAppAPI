@@ -20,5 +20,12 @@ namespace SwapApp.Controllers
             _accountService.RegisterUser(registerDto);
             return Ok();
         }
+
+        [HttpPost("login")]
+        public ActionResult Login([FromBody] LoginDto loginDto)
+        {
+            string token = _accountService.GenerateJwt(loginDto);
+            return Ok(token);
+        }
     }
 }
