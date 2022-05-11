@@ -6,7 +6,8 @@ namespace SwapApp.Entities
     {
         private string _connectionString = "Server = localhost; Database=SwapAppAPI;Trusted_Connection=True;";
         public DbSet<Item> Item { get; set; }
-        //public DbSet<User> User { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,21 +38,25 @@ namespace SwapApp.Entities
             modelBuilder.Entity<Item>()
                 .Property(e => e.Street)
                 .HasMaxLength(50);
-    
-            //modelBuilder.Entity<User>()
-            //    .Property(e => e.Email)
-            //    .IsRequired()
-            //    .HasMaxLength(100);
 
-            //modelBuilder.Entity<User>()
-            //    .Property(e => e.Name)
-            //    .IsRequired()
-            //    .HasMaxLength(25);
+            modelBuilder.Entity<User>()
+                .Property(e => e.Email)
+                .IsRequired()
+                .HasMaxLength(100);
 
-            //modelBuilder.Entity<User>()
-            //    .Property(e => e.Password)
-            //    .IsRequired()
-            //    .HasMaxLength(100);
+            modelBuilder.Entity<User>()
+                .Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(25);
+
+            modelBuilder.Entity<User>()
+                .Property(e => e.PasswordHash)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            modelBuilder.Entity<Role>()
+                .Property(e => e.Name)
+                .IsRequired();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

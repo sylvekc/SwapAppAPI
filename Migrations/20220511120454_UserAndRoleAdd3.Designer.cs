@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SwapApp.Entities;
 
@@ -10,9 +11,10 @@ using SwapApp.Entities;
 namespace SwapApp.Migrations
 {
     [DbContext(typeof(ItemDbContext))]
-    partial class ItemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220511120454_UserAndRoleAdd3")]
+    partial class UserAndRoleAdd3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,13 +63,7 @@ namespace SwapApp.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
 
                     b.ToTable("Item");
                 });
@@ -122,17 +118,6 @@ namespace SwapApp.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("SwapApp.Entities.Item", b =>
-                {
-                    b.HasOne("SwapApp.Entities.User", "User")
-                        .WithOne("Item")
-                        .HasForeignKey("SwapApp.Entities.Item", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("SwapApp.Entities.User", b =>
                 {
                     b.HasOne("SwapApp.Entities.Role", "Role")
@@ -142,12 +127,6 @@ namespace SwapApp.Migrations
                         .IsRequired();
 
                     b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("SwapApp.Entities.User", b =>
-                {
-                    b.Navigation("Item")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

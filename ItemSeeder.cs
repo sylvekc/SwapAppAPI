@@ -11,20 +11,43 @@ namespace SwapApp
         }
         public void Seed()
         {
-            if(_dbContext.Database.CanConnect())
+            if (_dbContext.Database.CanConnect())
             {
-                if (!_dbContext.Item.Any())
+                if (!_dbContext.Roles.Any())
                 {
-                    var items = GetItems();
-                    _dbContext.Item.AddRange(items);
+                    var roles = GetRoles();
+                    _dbContext.Roles.AddRange(roles);
                     _dbContext.SaveChanges();
                 }
+                //if (!_dbContext.Item.Any())
+                //{
+                //    var items = GetItems();
+                //    _dbContext.Item.AddRange(items);
+                //    _dbContext.SaveChanges();
+                //}
             }
+        }
+        private IEnumerable<Role> GetRoles()
+        {
+            var roles = new List<Role>()
+            {
+                new Role()
+                {
+                    Name = "User"
+                },
+
+                new Role()
+                {
+                    Name = "Admin"
+                },
+            };
+            return roles;
         }
 
         private IEnumerable<Item> GetItems()
         {
-            var items = new List<Item>();
+            var items = new List<Item>()
+            {
             new Item()
             {
                 Name = "długopis",
@@ -34,36 +57,20 @@ namespace SwapApp
                 City = "Kraków",
                 District = "Kazimierz",
                 Street = "Miodowa",
-                //User = new User()
-                //{
-                //    Name = "Sylwek",
-                //    Email = "sylvekz@vp.pl",
-                //    Password = "123",
-                //}
-                //WherePickup = new WherePickup()
-                //{
-                //    City = "Kraków",
-                //    District = "Kazimierz",
-                //    Street = "Miodowa",
-                //},
-                //User = new User()
-                //{
-                //    Email = "sylvekz@vp.pl",
-                //    Name = "Sylwek",
-                //    Password = "123",
-                //},
 
+            },
+                new Item()
+                {
+                    Name = "długopis",
+                    Description = "czarny",
+                    ForFree = false,
+                    SwapFor = "obojętne",
+                    City = "Kraków",
+                    District = "Kazimierz",
+                    Street = "Miodowa",
+                }
             };
-            new Item()
-            {
-                Name = "długopis",
-                Description = "czarny",
-                ForFree = false,
-                SwapFor = "obojętne",
-                City = "Kraków",
-                District = "Kazimierz",
-                Street = "Miodowa",
-            };
+
             return items;
         }
 
