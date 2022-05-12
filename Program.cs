@@ -65,9 +65,7 @@ app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseMiddleware<RequestTimeMiddleware>();
 app.UseAuthentication();
 app.UseHttpsRedirection();
-
-//app.UseAuthorization();
-
+app.UseAuthorization();
 app.MapControllers();
 app.Run();
  

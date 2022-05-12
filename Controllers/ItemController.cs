@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SwapApp.Entities;
 using SwapApp.Models;
@@ -8,6 +9,7 @@ namespace SwapApp.Controllers
 {
     [Route("api/item")]
     [ApiController]
+    [Authorize]
     public class ItemController : ControllerBase
     {
         private readonly IItemService _itemService;
@@ -41,6 +43,7 @@ namespace SwapApp.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult<IEnumerable<GetItemDto>> GetAllItems()
         {
             var itemsDtos = _itemService.GetAllItems();
@@ -48,6 +51,7 @@ namespace SwapApp.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public ActionResult<GetItemDto> GetItem([FromRoute] int id)
         {
             var item = _itemService.GetItemById(id);
