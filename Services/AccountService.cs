@@ -45,13 +45,13 @@ namespace SwapApp.Services
             var user = _itemDbContext.Users.Include(u=>u.Role).FirstOrDefault(e=>e.Email == loginDto.Email);
             if (user is null)
             {
-                throw new BadRequestException("Nieprawidłowa nazwa użytkownaika lub hasło");
+                throw new BadRequestException("Inwalid email or password");
             }
 
             var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, loginDto.Password);
             if (result == PasswordVerificationResult.Failed)
             {
-                throw new BadRequestException("Nieprawidłowa nazwa użytkowanika lub hasło");
+                throw new BadRequestException("Inwalid email or password");
             }
 
             var claims = new List<Claim>()

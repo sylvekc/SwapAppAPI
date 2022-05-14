@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SwapApp.Entities;
 using SwapApp.Models;
 using SwapApp.Services;
+using System.Security.Claims;
 
 namespace SwapApp.Controllers
 {
@@ -22,7 +23,7 @@ namespace SwapApp.Controllers
         [HttpPut("{id}")]
         public ActionResult UpdateItem ([FromBody] UpdateItemDto updateItem, [FromRoute] int id)
         {
-            _itemService.UpdateItem(updateItem, id);
+            _itemService.UpdateItem(updateItem, id, User);
 
             return Ok();
         }
@@ -30,14 +31,15 @@ namespace SwapApp.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteItem ([FromRoute] int id)
         {
-           _itemService.DeleteItem(id);
+           _itemService.DeleteItem(id, User);
           return NoContent();
         }
 
         [HttpPost]
         public ActionResult AddItem ([FromBody] AddItemDto addItem)
         {
-            var id = _itemService.AddItem(addItem);
+            var userId = int.Parse(User.FindFirst(c=>c.Type == ClaimTypes.NameIdentifier).Value);
+            var id = _itemService.AddItem(addItem, userId);
           
                 return Created($"/api/item/{id}", null);
         }
