@@ -23,7 +23,7 @@ namespace SwapApp.Controllers
         [HttpPut("{id}")]
         public ActionResult UpdateItem ([FromBody] UpdateItemDto updateItem, [FromRoute] int id)
         {
-            _itemService.UpdateItem(updateItem, id, User);
+            _itemService.UpdateItem(updateItem, id);
 
             return Ok();
         }
@@ -31,15 +31,14 @@ namespace SwapApp.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteItem ([FromRoute] int id)
         {
-           _itemService.DeleteItem(id, User);
+           _itemService.DeleteItem(id);
           return NoContent();
         }
 
         [HttpPost]
         public ActionResult AddItem ([FromBody] AddItemDto addItem)
         {
-            var userId = int.Parse(User.FindFirst(c=>c.Type == ClaimTypes.NameIdentifier).Value);
-            var id = _itemService.AddItem(addItem, userId);
+            var id = _itemService.AddItem(addItem);
           
                 return Created($"/api/item/{id}", null);
         }

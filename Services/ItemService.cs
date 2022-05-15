@@ -10,11 +10,11 @@ namespace SwapApp.Services
 {
     public interface IItemService
     {
-        int AddItem(AddItemDto addItem, int userId);
+        int AddItem(AddItemDto addItem);
         IEnumerable<GetItemDto> GetAllItems();
         GetItemDto GetItemById(int id);
-        bool DeleteItem (int id, ClaimsPrincipal user);
-        bool UpdateItem(UpdateItemDto updateItem, int id, ClaimsPrincipal user);
+        bool DeleteItem (int id);
+        bool UpdateItem(UpdateItemDto updateItem, int id);
 
     }
 
@@ -24,22 +24,24 @@ namespace SwapApp.Services
         private readonly IMapper _mapper;
         private readonly ILogger<ItemService> _logger;
         private readonly IAuthorizationService _authorizationService;
+        private readonly IUserContextService _userContextService;
 
-        public ItemService(ItemDbContext dbContext, IMapper mapper, ILogger<ItemService> logger, IAuthorizationService authorizationService)
+        public ItemService(ItemDbContext dbContext, IMapper mapper, ILogger<ItemService> logger, IAuthorizationService authorizationService, IUserContextService userContextService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _logger = logger;
             _authorizationService = authorizationService;
+            _userContextService = userContextService;
         }
 
-        public bool UpdateItem (UpdateItemDto updateItem, int id, ClaimsPrincipal user)
+        public bool UpdateItem (UpdateItemDto updateItem, int id)
         {
             var item = _dbContext.Item.FirstOrDefault(x => x.Id == id);
             if (item is null)
                 throw new NotFoundException("Item not found");
 
-            var authorizationResult = _authorizationService.AuthorizeAsync(user, item, new ResourceOperationRequirement(ResourceOperation.Update)).Result;
+            var authorizationResult = _authorizationService.AuthorizeAsync(_userContextService.User, item, new ResourceOperationRequirement(ResourceOperation.Update)).Result;
 
             if(!authorizationResult.Succeeded)
             {
@@ -58,13 +60,13 @@ namespace SwapApp.Services
             return true;
         }
 
-        public bool DeleteItem (int id, ClaimsPrincipal user)
+        public bool DeleteItem (int id)
         {
             _logger.LogError($"Item with id: {id} DELETE action invoked");
             var item = _dbContext.Item.FirstOrDefault(x => x.Id == id);
             if (item is null) return false;
 
-            var authorizationResult = _authorizationService.AuthorizeAsync(user, item, new ResourceOperationRequirement(ResourceOperation.Delete)).Result;
+            var authorizationResult = _authorizationService.AuthorizeAsync(_userContextService.User, item, new ResourceOperationRequirement(ResourceOperation.Delete)).Result;
 
             if (!authorizationResult.Succeeded)
             {
@@ -94,10 +96,10 @@ namespace SwapApp.Services
 
         }
 
-        public int AddItem(AddItemDto addItem, int userId)
+        public int AddItem(AddItemDto addItem)
         {
             var item = _mapper.Map<Item>(addItem);
-            item.UserId = userId;
+            item.UserId = (int)_userContextService.GetUserId;
             _dbContext.Item.Add(item);
             _dbContext.SaveChanges();
             return item.Id;
