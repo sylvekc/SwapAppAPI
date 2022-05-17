@@ -1,8 +1,7 @@
 ﻿using FluentValidation;
 using SwapApp.Entities;
-using SwapApp.Models;
 
-namespace SwapApp.Validators
+namespace SwapApp.Models.Validators
 {
     public class RegisterUserDtoValidator : AbstractValidator<RegisterUserDto>
     {

@@ -11,7 +11,7 @@ namespace SwapApp.Services
     public interface IItemService
     {
         int AddItem(AddItemDto addItem);
-        IEnumerable<GetItemDto> GetAllItems(string search);
+        PagedResult<GetItemDto> GetAllItems(ItemQuery query);
         GetItemDto GetItemById(int id);
         bool DeleteItem (int id);
         bool UpdateItem(UpdateItemDto updateItem, int id);
@@ -87,16 +87,22 @@ namespace SwapApp.Services
             return result;
         }
 
-        public IEnumerable<GetItemDto> GetAllItems(string search)
+        public PagedResult<GetItemDto> GetAllItems(ItemQuery query)
         {
-            var items = _dbContext.Item
-                .Where(e => search == null ||
-                            (e.Name.ToLower().Contains(search.ToLower()) ||
-                             e.Description.ToLower().Contains(search.ToLower())))
-                            .ToList();
+            var baseQuery = _dbContext.Item
+                .Where(e => query.Search == null || (e.Name.ToLower().Contains(query.Search.ToLower()) || e.Description.ToLower().Contains(query.Search.ToLower())))
+                .Where(c=> query.City == null || c.City.ToLower().Contains(query.City.ToLower()));
+
+            var items = baseQuery.Skip(query.PageSize*query.PageNumber - query.PageSize)
+                .Take(query.PageSize)
+                .ToList();
+
+            var totalItemsCount = items.Count();
+
             var itemsDtos = _mapper.Map<List<GetItemDto>>(items);
-           
-            return itemsDtos;
+
+            var result = new PagedResult<GetItemDto>(itemsDtos, totalItemsCount, query.PageSize, query.PageNumber);
+            return result;
 
         }
 

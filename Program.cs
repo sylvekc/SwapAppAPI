@@ -9,8 +9,8 @@ using SwapApp.Authorization;
 using SwapApp.Entities;
 using SwapApp.Middleware;
 using SwapApp.Models;
+using SwapApp.Models.Validators;
 using SwapApp.Services;
-using SwapApp.Validators;
 using System.Reflection;
 using System.Text;
 
@@ -49,6 +49,7 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
+builder.Services.AddScoped <IValidator<ItemQuery>, ItemQueryValidator>();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<RequestTimeMiddleware>();
