@@ -90,8 +90,10 @@ namespace SwapApp.Services
         public PagedResult<GetItemDto> GetAllItems(ItemQuery query)
         {
             var baseQuery = _dbContext.Item
-                .Where(e => query.Search == null || (e.Name.ToLower().Contains(query.Search.ToLower()) || e.Description.ToLower().Contains(query.Search.ToLower())))
-                .Where(c=> query.City == null || c.City.ToLower().Contains(query.City.ToLower()));
+                .Where(d => DateTime.Compare(d.ExpiresAt, DateTime.Now) > 0 && d.IsPublic == true)
+                .Where(e => query.Search == null || (e.Name.ToLower().Contains(query.Search.ToLower()) ||
+                                                     e.Description.ToLower().Contains(query.Search.ToLower())))
+                .Where(c => query.City == null || c.City.ToLower().Contains(query.City.ToLower()));
 
             var items = baseQuery.Skip(query.PageSize*query.PageNumber - query.PageSize)
                 .Take(query.PageSize)
@@ -110,6 +112,8 @@ namespace SwapApp.Services
         {
             var item = _mapper.Map<Item>(addItem);
             item.UserId = (int)_userContextService.GetUserId;
+            item.CreatedAt = DateTime.Now;
+            item.ExpiresAt = item.CreatedAt.AddDays(14);
             _dbContext.Item.Add(item);
             _dbContext.SaveChanges();
             return item.Id;

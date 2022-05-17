@@ -9,55 +9,6 @@ namespace SwapApp.Entities
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Item>()
-                .Property(e => e.Name)
-                .IsRequired()
-                .HasMaxLength(50);
-
-            modelBuilder.Entity<Item>()
-               .Property(e => e.Description)
-               .IsRequired()
-               .HasMaxLength(500);
-
-            modelBuilder.Entity<Item>()
-               .Property(e => e.ForFree)
-               .IsRequired();
-
-            modelBuilder.Entity<Item>()
-               .Property(e => e.SwapFor)
-               .IsRequired()
-               .HasMaxLength(100);
-
-            modelBuilder.Entity<Item>()
-                .Property(e => e.City)
-                .IsRequired()
-                .HasMaxLength(50);
-
-            modelBuilder.Entity<Item>()
-                .Property(e => e.Street)
-                .HasMaxLength(50);
-
-            modelBuilder.Entity<User>()
-                .Property(e => e.Email)
-                .IsRequired()
-                .HasMaxLength(100);
-
-            modelBuilder.Entity<User>()
-                .Property(e => e.Name)
-                .IsRequired()
-                .HasMaxLength(25);
-
-            modelBuilder.Entity<User>()
-                .Property(e => e.PasswordHash)
-                .IsRequired()
-                .HasMaxLength(100);
-
-            modelBuilder.Entity<Role>()
-                .Property(e => e.Name)
-                .IsRequired();
-        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

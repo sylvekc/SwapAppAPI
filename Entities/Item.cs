@@ -12,6 +12,9 @@ namespace SwapApp.Entities
         public string City { get; set; }
         public string District { get; set; }
         public string Street { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime ExpiresAt { get; set; }
+        public bool IsPublic { get; set; } = true;
         public int UserId { get; set; }
         public virtual User User { get; set; }
     }
