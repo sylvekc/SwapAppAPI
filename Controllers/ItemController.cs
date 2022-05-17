@@ -45,9 +45,9 @@ namespace SwapApp.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult<IEnumerable<GetItemDto>> GetAllItems()
+        public ActionResult<IEnumerable<GetItemDto>> GetAllItems([FromQuery] string? search)
         {
-            var itemsDtos = _itemService.GetAllItems();
+            var itemsDtos = _itemService.GetAllItems(search);
             return Ok(itemsDtos);
         }
 

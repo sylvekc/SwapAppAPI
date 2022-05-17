@@ -11,7 +11,7 @@ namespace SwapApp.Services
     public interface IItemService
     {
         int AddItem(AddItemDto addItem);
-        IEnumerable<GetItemDto> GetAllItems();
+        IEnumerable<GetItemDto> GetAllItems(string search);
         GetItemDto GetItemById(int id);
         bool DeleteItem (int id);
         bool UpdateItem(UpdateItemDto updateItem, int id);
@@ -87,9 +87,13 @@ namespace SwapApp.Services
             return result;
         }
 
-        public IEnumerable<GetItemDto> GetAllItems()
+        public IEnumerable<GetItemDto> GetAllItems(string search)
         {
-            var items = _dbContext.Item.ToList();
+            var items = _dbContext.Item
+                .Where(e => search == null ||
+                            (e.Name.ToLower().Contains(search.ToLower()) ||
+                             e.Description.ToLower().Contains(search.ToLower())))
+                            .ToList();
             var itemsDtos = _mapper.Map<List<GetItemDto>>(items);
            
             return itemsDtos;
