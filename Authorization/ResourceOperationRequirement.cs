@@ -8,6 +8,8 @@ namespace SwapApp.Authorization
         Read,
         Update,
         Delete,
+        ExtendValidity,
+        ChangeVisibility
     }
     public class ResourceOperationRequirement : IAuthorizationRequirement
     {

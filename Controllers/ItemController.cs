@@ -60,5 +60,19 @@ namespace SwapApp.Controllers
             return Ok(item);
         }
 
+        [HttpPut("extendValidity/{id}")]
+        public ActionResult ExtendItemValidity([FromRoute] int id)
+        {
+            _itemService.ExtendValidity(id);
+            return Ok();
+        }
+
+        [HttpPut("changeVisibility/{id}")]
+        public ActionResult ChangeVisibility([FromRoute] int id)
+        {
+            _itemService.ChangeVisibility(id);
+            return Ok();
+        }
+
     }
 }

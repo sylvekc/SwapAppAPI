@@ -15,6 +15,10 @@ namespace SwapApp.Services
         GetItemDto GetItemById(int id);
         bool DeleteItem (int id);
         bool UpdateItem(UpdateItemDto updateItem, int id);
+        bool ExtendValidity(int id);
+        bool ChangeVisibility(int id);
+
+
 
     }
 
@@ -90,7 +94,7 @@ namespace SwapApp.Services
         public PagedResult<GetItemDto> GetAllItems(ItemQuery query)
         {
             var baseQuery = _dbContext.Item
-                .Where(d => DateTime.Compare(d.ExpiresAt, DateTime.Now) > 0 && d.IsPublic == true)
+                .Where(d => DateTime.Compare(DateTime.Now, d.ExpiresAt) < 0 && d.IsPublic == true)
                 .Where(e => query.Search == null || (e.Name.ToLower().Contains(query.Search.ToLower()) ||
                                                      e.Description.ToLower().Contains(query.Search.ToLower())))
                 .Where(c => query.City == null || c.City.ToLower().Contains(query.City.ToLower()));
@@ -118,5 +122,54 @@ namespace SwapApp.Services
             _dbContext.SaveChanges();
             return item.Id;
         }
+
+        public bool ExtendValidity(int id)
+        {
+            var item = _dbContext.Item.FirstOrDefault(x => x.Id == id);
+            if (item is null)
+                throw new NotFoundException("Item not found");
+            var authorizationResult = _authorizationService.AuthorizeAsync(_userContextService.User, item, new ResourceOperationRequirement(ResourceOperation.ExtendValidity)).Result;
+            if (!authorizationResult.Succeeded)
+            {
+                throw new ForbidException("You can't extend validity of this item.");
+            }
+
+            if (DateTime.Compare(DateTime.Now, item.ExpiresAt) < 0)
+            {
+                throw new ForbidException($"This item is currently valid. It expires at {item.ExpiresAt}");
+            }
+        
+            item.CreatedAt = DateTime.Now;
+            item.ExpiresAt = DateTime.Now.AddDays(14);
+            _dbContext.SaveChanges();
+            return true;
+
+        }
+
+        public bool ChangeVisibility(int id)
+        {
+            var item = _dbContext.Item.FirstOrDefault(x => x.Id == id);
+            if (item is null)
+                throw new NotFoundException("Item not found");
+            var authorizationResult = _authorizationService.AuthorizeAsync(_userContextService.User, item, new ResourceOperationRequirement(ResourceOperation.ChangeVisibility)).Result;
+            if (!authorizationResult.Succeeded)
+            {
+                throw new ForbidException("You can't change visibility of this item.");
+            }
+
+            if (item.IsPublic)
+            {
+                item.IsPublic=false;
+            }
+            else
+            {
+                item.IsPublic = true;
+            }
+
+            _dbContext.SaveChanges();
+
+            return true;
+        }
+
     }
 }
