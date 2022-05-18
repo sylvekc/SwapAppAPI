@@ -74,5 +74,13 @@ namespace SwapApp.Controllers
             return Ok();
         }
 
+        [HttpGet("user/{id}")]
+        [AllowAnonymous]
+        public ActionResult<IEnumerable<GetItemDto>> GetAllUserItems([FromQuery] ItemQuery query, [FromRoute] int id)
+        {
+            var itemsDtos = _itemService.GetAllUserItems(query, id);
+            return Ok(itemsDtos);
+        }
+
     }
 }

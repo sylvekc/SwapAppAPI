@@ -17,6 +17,7 @@ namespace SwapApp.Services
         bool UpdateItem(UpdateItemDto updateItem, int id);
         bool ExtendValidity(int id);
         bool ChangeVisibility(int id);
+        PagedResult<GetItemDto> GetAllUserItems(ItemQuery query, int id);
 
 
 
@@ -169,6 +170,26 @@ namespace SwapApp.Services
             _dbContext.SaveChanges();
 
             return true;
+        }
+
+        public PagedResult<GetItemDto> GetAllUserItems(ItemQuery query, int id)
+        {
+            var baseQuery = _dbContext.Item
+                .Where(c => c.UserId == id)
+                .Where(d => DateTime.Compare(DateTime.Now, d.ExpiresAt) < 0 && d.IsPublic == true)
+                .Where(e => query.Search == null || (e.Name.ToLower().Contains(query.Search.ToLower()) ||
+                                                     e.Description.ToLower().Contains(query.Search.ToLower())));
+
+            var userItems = baseQuery.Skip(query.PageSize * query.PageNumber - query.PageSize)
+                .Take(query.PageSize)
+                .ToList();
+
+            var totalItemsCount = userItems.Count();
+
+            var itemsDtos = _mapper.Map<List<GetItemDto>>(userItems);
+
+            var result = new PagedResult<GetItemDto>(itemsDtos, totalItemsCount, query.PageSize, query.PageNumber);
+            return result;
         }
 
     }
