@@ -20,27 +20,12 @@ namespace SwapApp.Controllers
             _itemService = itemService;
         }
 
-        [HttpPut("{id}")]
-        public ActionResult UpdateItem ([FromBody] UpdateItemDto updateItem, [FromRoute] int id)
-        {
-            _itemService.UpdateItem(updateItem, id);
-
-            return Ok();
-        }
-
-        [HttpDelete("{id}")]
-        public ActionResult DeleteItem ([FromRoute] int id)
-        {
-           _itemService.DeleteItem(id);
-          return NoContent();
-        }
-
         [HttpPost]
-        public ActionResult AddItem ([FromBody] AddItemDto addItem)
+        public ActionResult AddItem([FromBody] AddItemDto addItem)
         {
             var id = _itemService.AddItem(addItem);
-          
-                return Created($"/api/item/{id}", null);
+
+            return Created($"/api/item/{id}", null);
         }
 
         [HttpGet]
@@ -60,6 +45,22 @@ namespace SwapApp.Controllers
             return Ok(item);
         }
 
+        [HttpGet("user/{id}")]
+        [AllowAnonymous]
+        public ActionResult<IEnumerable<GetItemDto>> GetAllUserItems([FromQuery] ItemQuery query, [FromRoute] int id)
+        {
+            var itemsDtos = _itemService.GetAllUserItems(query, id);
+            return Ok(itemsDtos);
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult UpdateItem ([FromBody] UpdateItemDto updateItem, [FromRoute] int id)
+        {
+            _itemService.UpdateItem(updateItem, id);
+
+            return Ok();
+        }
+
         [HttpPut("extendValidity/{id}")]
         public ActionResult ExtendItemValidity([FromRoute] int id)
         {
@@ -74,13 +75,11 @@ namespace SwapApp.Controllers
             return Ok();
         }
 
-        [HttpGet("user/{id}")]
-        [AllowAnonymous]
-        public ActionResult<IEnumerable<GetItemDto>> GetAllUserItems([FromQuery] ItemQuery query, [FromRoute] int id)
+        [HttpDelete("{id}")]
+        public ActionResult DeleteItem ([FromRoute] int id)
         {
-            var itemsDtos = _itemService.GetAllUserItems(query, id);
-            return Ok(itemsDtos);
+           _itemService.DeleteItem(id);
+          return NoContent();
         }
-
     }
 }

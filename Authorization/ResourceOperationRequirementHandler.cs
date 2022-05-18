@@ -15,7 +15,7 @@ namespace SwapApp.Authorization
             }
             var userId = context.User.FindFirst(e => e.Type == ClaimTypes.NameIdentifier).Value;
 
-            if (item.UserId == int.Parse(userId))
+            if (item.UserId == int.Parse(userId) || context.User.IsInRole("Admin"))
             {
                 context.Succeed(requirement);
             }
