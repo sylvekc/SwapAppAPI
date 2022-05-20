@@ -21,11 +21,5 @@ namespace SwapApp.Models
         public string District { get; set; }
         [MaxLength(50)]
         public string Street { get; set; }
-        [Required]
-        public DateTime CreatedAt { get; set; }
-        [Required]
-        public DateTime ExpiresAt { get; set; }
-        [Required]
-        public bool IsPublic { get; set; } = true;
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SwapApp.Entities;
 
@@ -11,9 +12,10 @@ using SwapApp.Entities;
 namespace SwapApp.Migrations
 {
     [DbContext(typeof(ItemDbContext))]
-    partial class ItemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220520132108_AddItemPhotoFix")]
+    partial class AddItemPhotoFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

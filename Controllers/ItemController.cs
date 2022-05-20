@@ -57,10 +57,9 @@ namespace SwapApp.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult UpdateItem([FromBody] UpdateItemDto updateItem, [FromRoute] int id)
+        public ActionResult UpdateItem([FromForm] UpdateItemDto updateItem, [FromRoute] int id)
         {
             _itemService.UpdateItem(updateItem, id);
-
             return Ok();
         }
 

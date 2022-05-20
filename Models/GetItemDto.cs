@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using SwapApp.Entities;
 
 namespace SwapApp.Models
 {
@@ -17,5 +18,6 @@ namespace SwapApp.Models
         public DateTime CreatedAt { get; set; }
         public DateTime ExpiresAt { get; set; }
         public bool IsPublic { get; set; } = true;
+        public virtual List<ItemPhoto> ItemPhotos { get; set; }
     }
 }

@@ -9,6 +9,5 @@ namespace SwapApp.Entities
         public string FileName { get; set; }
         [Required]
         public int ItemId { get; set; }
-        public virtual Item Item { get; set; }
     }
 }

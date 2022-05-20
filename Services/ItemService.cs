@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.ComponentModel.DataAnnotations;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using SwapApp.Authorization;
 using SwapApp.Entities;
@@ -9,6 +10,7 @@ using System.Net.Mime;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace SwapApp.Services
 {
@@ -56,7 +58,7 @@ namespace SwapApp.Services
 
         public GetItemDto GetItemById(int id)
         {
-            var item = _dbContext.Item.FirstOrDefault(x => x.Id == id);
+            var item = _dbContext.Item.Include(f => f.ItemPhotos).FirstOrDefault(x => x.Id == id);
             if (item is null)
                 throw new NotFoundException($"Item with id: {id} not found");
             var result = _mapper.Map<GetItemDto>(item);
@@ -87,7 +89,7 @@ namespace SwapApp.Services
                     : baseQuery.OrderByDescending(selectedColumn);
             }
 
-            var items = baseQuery.Skip(query.PageSize * query.PageNumber - query.PageSize)
+            var items = baseQuery.Include(f => f.ItemPhotos).Skip(query.PageSize * query.PageNumber - query.PageSize)
                 .Take(query.PageSize)
                 .ToList();
 
@@ -124,7 +126,7 @@ namespace SwapApp.Services
                     : baseQuery.OrderByDescending(selectedColumn);
             }
 
-            var userItems = baseQuery.Skip(query.PageSize * query.PageNumber - query.PageSize)
+            var userItems = baseQuery.Include(f => f.ItemPhotos).Skip(query.PageSize * query.PageNumber - query.PageSize)
                 .Take(query.PageSize)
                 .ToList();
 
