@@ -5,6 +5,7 @@ using SwapApp.Entities;
 using SwapApp.Models;
 using SwapApp.Services;
 using System.Security.Claims;
+using SwapApp.Exceptions;
 
 namespace SwapApp.Controllers
 {
@@ -16,17 +17,19 @@ namespace SwapApp.Controllers
         private readonly IItemService _itemService;
 
         public ItemController(IItemService itemService)
-        { 
+        {
             _itemService = itemService;
         }
 
         [HttpPost]
-        public ActionResult AddItem([FromBody] AddItemDto addItem)
+        public async Task<ActionResult> AddItem([FromForm] AddItemDto addItem, List<IFormFile> files)
         {
             var id = _itemService.AddItem(addItem);
+            await _itemService.UploadPhotos(files,id);
 
             return Created($"/api/item/{id}", null);
         }
+
 
         [HttpGet]
         [AllowAnonymous]
@@ -54,7 +57,7 @@ namespace SwapApp.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult UpdateItem ([FromBody] UpdateItemDto updateItem, [FromRoute] int id)
+        public ActionResult UpdateItem([FromBody] UpdateItemDto updateItem, [FromRoute] int id)
         {
             _itemService.UpdateItem(updateItem, id);
 
@@ -76,10 +79,40 @@ namespace SwapApp.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult DeleteItem ([FromRoute] int id)
+        public ActionResult DeleteItem([FromRoute] int id)
         {
-           _itemService.DeleteItem(id);
-          return NoContent();
+            _itemService.DeleteItem(id);
+            return NoContent();
         }
+
+        //[HttpPost("upload")]
+        //public async Task<IActionResult> Upload([FromForm] List<IFormFile> files)
+
+        //{
+
+        //    var result = new List<ItemPhoto>();
+        //    foreach (var file in files)
+        //    {
+        //        if (file != null && file.Length > 0)
+        //        {
+        //            var rootPath = Directory.GetCurrentDirectory();
+        //            var fileName = file.FileName;
+        //            var fullPath = $"{rootPath}/ItemPhotos/{fileName}";
+        //            using (var stream = new FileStream(fullPath, FileMode.Create))
+        //            {
+        //                await file.CopyToAsync(stream);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            throw new BadRequestException("Something went wrong");
+        //        }
+
+        //        result.Add(new ItemPhoto() { FileName = fileName });
+        //    }
+
+        //    return Ok();
+        //}
+
     }
 }

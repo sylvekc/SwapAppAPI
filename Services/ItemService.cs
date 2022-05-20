@@ -5,7 +5,10 @@ using SwapApp.Entities;
 using SwapApp.Exceptions;
 using SwapApp.Models;
 using System.Linq.Expressions;
+using System.Net.Mime;
 using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SwapApp.Services
 {
@@ -19,6 +22,7 @@ namespace SwapApp.Services
         bool ExtendValidity(int id);
         bool ChangeVisibility(int id);
         bool DeleteItem(int id);
+        Task UploadPhotos(List<IFormFile> files, int id);
     }
 
     public class ItemService : IItemService
@@ -40,6 +44,7 @@ namespace SwapApp.Services
 
         public int AddItem(AddItemDto addItem)
         {
+
             var item = _mapper.Map<Item>(addItem);
             item.UserId = (int)_userContextService.GetUserId;
             item.CreatedAt = DateTime.Now;
@@ -221,5 +226,41 @@ namespace SwapApp.Services
             _dbContext.SaveChanges();
             return true;
         }
+
+        public async Task UploadPhotos(List<IFormFile> files, int id)
+        {
+            var result = new List <ItemPhoto>();
+            foreach (var file in files)
+            {
+                var extension = file.ContentType;
+
+                if (file == null)
+                    throw new BadRequestException("One or more files are null");
+                if (file.Length == 0)
+                    throw new BadRequestException("One or more files are zero-length");
+                if (!extension.StartsWith("image"))
+                    throw new BadRequestException("One or more files are not images");
+
+                var rootPath = Directory.GetCurrentDirectory();
+                var fileName = file.FileName;
+                var fileExtension = fileName.Split('.')[1];
+                fileName = DateTime.Now.Ticks + "." + fileExtension;
+
+                var fullPath = $"{rootPath}/ItemPhotos/{fileName}";
+                await using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                     await file.CopyToAsync(stream);
+                }
+
+                result.Add(new ItemPhoto()
+                {
+                    FileName = fileName,
+                    ItemId = id
+                });
+            }
+            await _dbContext.ItemPhotos.AddRangeAsync(result);
+            await _dbContext.SaveChangesAsync();
+        }
+
     }
 }

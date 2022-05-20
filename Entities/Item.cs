@@ -17,5 +17,6 @@ namespace SwapApp.Entities
         public bool IsPublic { get; set; } = true;
         public int UserId { get; set; }
         public virtual User User { get; set; }
+        public List<ItemPhoto> ItemPhotos { get; set; }
     }
 }
