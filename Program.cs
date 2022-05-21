@@ -13,6 +13,7 @@ using SwapApp.Models.Validators;
 using SwapApp.Services;
 using System.Reflection;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseNLog();
@@ -41,8 +42,8 @@ builder.Services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHa
 builder.Services.AddControllers().AddFluentValidation();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<ItemDbContext>();
-builder.Services.AddScoped<ItemSeeder>();
+builder.Services.AddDbContext<ItemDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SwapAppDbConnection")));
+builder.Services.AddScoped<Seeder>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<IItemService, ItemService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
@@ -64,7 +65,7 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 app.UseCors("FrontEndClient");
 var scope = app.Services.CreateScope();
-var seeder = scope.ServiceProvider.GetRequiredService<ItemSeeder>();
+var seeder = scope.ServiceProvider.GetRequiredService<Seeder>();
 seeder.Seed();
 
 

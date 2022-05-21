@@ -22,10 +22,10 @@ namespace SwapApp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddItem([FromForm] AddItemDto addItem, List<IFormFile> files)
+        public async Task<ActionResult> AddItem([FromForm] AddItemDto addItem, List<IFormFile> photos)
         {
             var id = _itemService.AddItem(addItem);
-            await _itemService.UploadPhotos(files,id);
+            await _itemService.UploadPhotos(photos,id);
 
             return Created($"/api/item/{id}", null);
         }

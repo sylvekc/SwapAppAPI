@@ -231,6 +231,10 @@ namespace SwapApp.Services
 
         public async Task UploadPhotos(List<IFormFile> files, int id)
         {
+            if (files.Count == 0)
+                throw new BadRequestException("You must add at least one photo (max. 6)");
+            if (files.Count > 6)
+                throw new BadRequestException("You cannot add more than 6 photos");
             var result = new List <ItemPhoto>();
             foreach (var file in files)
             {
