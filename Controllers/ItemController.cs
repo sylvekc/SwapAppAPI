@@ -24,8 +24,12 @@ namespace SwapApp.Controllers
         [HttpPost]
         public async Task<ActionResult> AddItem([FromForm] AddItemDto addItem, List<IFormFile> photos)
         {
+            if (!photos.Any())
+            {
+                throw new BadRequestException("You must add at least one photo (max. 6)");
+            }
             var id = _itemService.AddItem(addItem);
-            await _itemService.UploadPhotos(photos,id);
+            await _itemService.UploadPhotos(photos, id);
 
             return Created($"/api/item/{id}", null);
         }

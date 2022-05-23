@@ -18,6 +18,6 @@ namespace SwapApp.Models
         public DateTime CreatedAt { get; set; }
         public DateTime ExpiresAt { get; set; }
         public bool IsPublic { get; set; } = true;
-        public virtual List<ItemPhoto> ItemPhotos { get; set; }
+        public List<ItemPhotoDto> ItemPhotos { get; set; }
     }
 }

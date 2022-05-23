@@ -10,6 +10,7 @@ namespace SwapApp
         {
             CreateMap<Item, GetItemDto>();
             CreateMap<AddItemDto, Item>();
+            CreateMap<ItemPhoto, ItemPhotoDto>();
         }
     }
 }
