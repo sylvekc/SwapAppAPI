@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SwapApp.Models;
 using SwapApp.Services;
 
 namespace SwapApp.Controllers
 {
 
-    [Route("api/reservation/item")]
+    [Route("api/reservation")]
     [ApiController]
     [Authorize]
 
@@ -18,7 +19,15 @@ namespace SwapApp.Controllers
             _reservationService = reservationService;
         }
 
-        [HttpPut("{id}")]
+        [HttpGet("myReservations")]
+        public ActionResult<IEnumerable<GetItemDto>> GetAllUserItems([FromQuery] ItemQuery query)
+        {
+            var itemsDtos = _reservationService.GetAllItemsReservedByUser(query);
+            return Ok(itemsDtos);
+        }
+
+
+        [HttpPut("item/{id}")]
         public ActionResult AddReservation([FromRoute] int id)
         {
             _reservationService.AddReservation(id);

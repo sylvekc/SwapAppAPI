@@ -77,6 +77,7 @@ namespace SwapApp.Services
         {
             var baseQuery = _dbContext.Item
                 .Where(d => DateTime.Compare(DateTime.Now, d.ExpiresAt) < 0 && d.IsPublic == true)
+                .Where(r => r.ReservedBy == null)
                 .Where(e => query.Search == null || (e.Name.ToLower().Contains(query.Search.ToLower()) ||
                                                      e.Description.ToLower().Contains(query.Search.ToLower())))
                 .Where(c => query.City == null || c.City.ToLower().Contains(query.City.ToLower()));
@@ -196,9 +197,9 @@ namespace SwapApp.Services
 
         public bool ChangeVisibility(int id)
         {
-            var item = _dbContext.Item.FirstOrDefault(x => x.Id == id);
+            var item = _dbContext.Item.Where(p => p.ReservedBy == null).FirstOrDefault(x => x.Id == id);
             if (item is null)
-                throw new NotFoundException("Item not found");
+                throw new NotFoundException("Item not found or item is already reserved");
             var authorizationResult = _authorizationService.AuthorizeAsync(_userContextService.User, item, new ResourceOperationRequirement(ResourceOperation.ChangeVisibility)).Result;
             if (!authorizationResult.Succeeded)
             {
