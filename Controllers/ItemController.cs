@@ -88,33 +88,16 @@ namespace SwapApp.Controllers
             return NoContent();
         }
 
-        //[HttpPost("upload")]
-        //public async Task<IActionResult> Upload([FromForm] List<IFormFile> files)
-
+        //[HttpGet("photos/{id}")]
+        //public List<byte[]> Photos([FromRoute] int id)
         //{
+        //    var photos = _itemService.Photos(id);
+        //    //foreach (var photo in photos)
+        //    //{
+        //    //    File(photo, "image/jpeg");
+        //    //}
 
-        //    var result = new List<ItemPhoto>();
-        //    foreach (var file in files)
-        //    {
-        //        if (file != null && file.Length > 0)
-        //        {
-        //            var rootPath = Directory.GetCurrentDirectory();
-        //            var fileName = file.FileName;
-        //            var fullPath = $"{rootPath}/ItemPhotos/{fileName}";
-        //            using (var stream = new FileStream(fullPath, FileMode.Create))
-        //            {
-        //                await file.CopyToAsync(stream);
-        //            }
-        //        }
-        //        else
-        //        {
-        //            throw new BadRequestException("Something went wrong");
-        //        }
-
-        //        result.Add(new ItemPhoto() { FileName = fileName });
-        //    }
-
-        //    return Ok();
+        //    return File(photos, "image/jpeg");
         //}
 
     }

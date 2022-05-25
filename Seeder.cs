@@ -67,11 +67,11 @@ namespace SwapApp
                     {
                         new ItemPhoto() 
                         {
-                        FileName = "drukarka1.jpg"
+                        FilePath = "drukarka1.jpg"
                         },
                         new ItemPhoto()
                         {
-                            FileName = "drukarka2.jpg"
+                            FilePath = "drukarka2.jpg"
                         }
                     }
 
@@ -89,11 +89,11 @@ namespace SwapApp
                     {
                         new ItemPhoto()
                         {
-                            FileName = "toster1.jpg"
+                            FilePath = "toster1.jpg"
                         },
                         new ItemPhoto()
                         {
-                            FileName = "toster2.jpg"
+                            FilePath = "toster2.jpg"
                         }
                     }
 

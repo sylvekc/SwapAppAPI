@@ -1,7 +1,10 @@
-﻿namespace SwapApp.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SwapApp.Models
 {
     public class ItemPhotoDto
     {
-        public string FileName { get; set; }
+        [Required]
+        public string FilePath { get; set; }
     }
 }

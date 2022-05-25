@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Buffers.Text;
+using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using SwapApp.Authorization;
@@ -11,6 +12,7 @@ using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace SwapApp.Services
 {
@@ -25,6 +27,9 @@ namespace SwapApp.Services
         bool ChangeVisibility(int id);
         bool DeleteItem(int id);
         Task UploadPhotos(List<IFormFile> files, int id);
+        //List<byte[]> Photos(int id);
+
+
     }
 
     public class ItemService : IItemService
@@ -58,7 +63,10 @@ namespace SwapApp.Services
 
         public GetItemDto GetItemById(int id)
         {
-            var item = _dbContext.Item.Include(f => f.ItemPhotos).FirstOrDefault(x => x.Id == id);
+            var item = _dbContext.Item
+                .Include(f => f.ItemPhotos)
+                .FirstOrDefault(x => x.Id == id);
+
             if (item is null)
                 throw new NotFoundException($"Item with id: {id} not found");
             var result = _mapper.Map<GetItemDto>(item);
@@ -250,7 +258,7 @@ namespace SwapApp.Services
                 var fileExtension = fileName.Split('.')[1];
                 fileName = DateTime.Now.Ticks + "." + fileExtension;
 
-                var fullPath = $"{rootPath}/ItemPhotos/{fileName}";
+                var fullPath = @$"{rootPath}\ItemPhotos\{fileName}";
                 await using (var stream = new FileStream(fullPath, FileMode.Create))
                 {
                      await file.CopyToAsync(stream);
@@ -258,13 +266,31 @@ namespace SwapApp.Services
 
                 result.Add(new ItemPhoto()
                 {
-                    FileName = fileName,
+                    FilePath = fullPath,
                     ItemId = id
                 });
             }
             await _dbContext.ItemPhotos.AddRangeAsync(result);
             await _dbContext.SaveChangesAsync();
         }
+
+        //public List<byte[]> Photos(int id)
+        //{
+        //    var item = _dbContext.Item
+        //        .Include(f => f.ItemPhotos)
+        //        .FirstOrDefault(x => x.Id == id);
+        //    var photos = item.ItemPhotos;
+        //    List<byte[]> b = new List<byte[]>();
+        //    foreach (var photo in photos)
+        //    {
+        //        b.Add(System.IO.File.ReadAllBytes(@$"{photo.FilePath}"));
+        //    }
+
+        //    return b;
+
+
+
+        //}
 
 
     }

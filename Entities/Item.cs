@@ -16,6 +16,7 @@ namespace SwapApp.Entities
         public DateTime ExpiresAt { get; set; }
         public bool IsPublic { get; set; } = true;
         public int UserId { get; set; }
+        public int? ReservedBy { get; set; } = null;
         public virtual User User { get; set; }
         public virtual List<ItemPhoto> ItemPhotos { get; set; }
     }
