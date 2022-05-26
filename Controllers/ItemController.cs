@@ -87,18 +87,6 @@ namespace SwapApp.Controllers
             _itemService.DeleteItem(id);
             return NoContent();
         }
-
-        //[HttpGet("photos/{id}")]
-        //public List<byte[]> Photos([FromRoute] int id)
-        //{
-        //    var photos = _itemService.Photos(id);
-        //    //foreach (var photo in photos)
-        //    //{
-        //    //    File(photo, "image/jpeg");
-        //    //}
-
-        //    return File(photos, "image/jpeg");
-        //}
-
+        
     }
 }

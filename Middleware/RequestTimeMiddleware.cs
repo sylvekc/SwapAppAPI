@@ -12,6 +12,7 @@ namespace SwapApp.Middleware
             _logger = logger;
             _stopWatch = new Stopwatch();
         }
+
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             _stopWatch.Start();
@@ -23,9 +24,6 @@ namespace SwapApp.Middleware
                 var message = $"Request [{context.Request.Method}] at {context.Request.Path} took {_stopWatch.ElapsedMilliseconds}ms";
                 _logger.LogInformation(message);
             }
-           
-            
-
         }
     }
 }

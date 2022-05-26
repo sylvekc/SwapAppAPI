@@ -159,7 +159,6 @@ namespace SwapApp.Services
             {
                 throw new ForbidException("You can't update this item.");
             }
-
             item.Name = updateItem.Name;
             item.Description = updateItem.Description;
             item.District = updateItem.District;
@@ -259,7 +258,7 @@ namespace SwapApp.Services
                 var fileExtension = fileName.Split('.')[1];
                 fileName = DateTime.Now.Ticks + "." + fileExtension;
 
-                var fullPath = @$"{rootPath}\ItemPhotos\{fileName}";
+                var fullPath = @$"{rootPath}\wwwroot\{fileName}";
                 await using (var stream = new FileStream(fullPath, FileMode.Create))
                 {
                      await file.CopyToAsync(stream);
@@ -274,25 +273,6 @@ namespace SwapApp.Services
             await _dbContext.ItemPhotos.AddRangeAsync(result);
             await _dbContext.SaveChangesAsync();
         }
-
-        //public List<byte[]> Photos(int id)
-        //{
-        //    var item = _dbContext.Item
-        //        .Include(f => f.ItemPhotos)
-        //        .FirstOrDefault(x => x.Id == id);
-        //    var photos = item.ItemPhotos;
-        //    List<byte[]> b = new List<byte[]>();
-        //    foreach (var photo in photos)
-        //    {
-        //        b.Add(System.IO.File.ReadAllBytes(@$"{photo.FilePath}"));
-        //    }
-
-        //    return b;
-
-
-
-        //}
-
 
     }
 }

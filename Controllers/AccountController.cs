@@ -14,15 +14,16 @@ namespace SwapApp.Controllers
         {
             _accountService = accountService;
         }
+
         [HttpPost("register")]
-        public ActionResult RegisterUser([FromBody] RegisterUserDto registerDto)
+        public ActionResult RegisterUser([FromForm] RegisterUserDto registerDto)
         {
             _accountService.RegisterUser(registerDto);
             return Ok();
         }
 
         [HttpPost("login")]
-        public ActionResult Login([FromBody] LoginDto loginDto)
+        public ActionResult Login([FromForm] LoginDto loginDto)
         {
             string token = _accountService.GenerateJwt(loginDto);
             return Ok(token);

@@ -70,6 +70,10 @@ namespace SwapApp.Services
         public bool AddReservation(int id)
         {
             var item = _dbContext.Item.FirstOrDefault(x => x.Id == id);
+            if (item == null)
+            {
+                throw new NotFoundException($"Item with id: {id} not found");
+            }
             if (item.ReservedBy != null)
             {
                 throw new ForbidException("This item is currently reserved");
