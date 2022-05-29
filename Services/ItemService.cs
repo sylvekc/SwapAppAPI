@@ -27,7 +27,6 @@ namespace SwapApp.Services
         bool ChangeVisibility(int id);
         bool DeleteItem(int id);
         Task UploadPhotos(List<IFormFile> files, int id);
-        //List<byte[]> Photos(int id);
 
 
     }

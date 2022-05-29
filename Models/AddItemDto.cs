@@ -4,22 +4,12 @@ namespace SwapApp.Models
 {
     public class AddItemDto
     {
-        [Required]
-        [MaxLength(50)]
         public string Name { get; set; }
-        [Required]
-        [MaxLength(500)]
         public string Description { get; set; }
-        [Required]
         public bool ForFree { get; set; }
-        [MaxLength(100)]
-        public string SwapFor { get; set; }
-        [Required]
-        [MaxLength(50)]
+        public string? SwapFor { get; set; }
         public string City { get; set; }
-        [MaxLength(50)]
         public string District { get; set; }
-        [MaxLength(50)]
         public string Street { get; set; }
     }
 }
